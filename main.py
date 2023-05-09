@@ -55,7 +55,30 @@ def getPickemInfo(api_key, event, steamID, authCode, user):
     Used to get Users Pickems
     Usage: getPickemInfo(api_key, event, steamID, authCode, user)
     '''
-    # ... rest of the function code ...
+    getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
+    tournamentLayoutResponse = requests.get(getTournamentLayout_url)
+
+    tournamentVar_json = json.loads(tournamentLayoutResponse.text)
+    teams_info = tournamentVar_json["result"]["teams"]
+
+    # Define a function to get the team name by pickid
+    def get_team_name_by_pickid(pickid, teams):
+        for team in teams:
+            if team["pickid"] == pickid:
+                return team["name"]
+        return None
+
+    # Get user Predictions
+    getPredictions_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentPredictions/v1?key={api_key}&event={event}&steamid={steamID}&steamidkey={authCode}"
+
+    predictions_response = requests.get(getPredictions_url)
+    predictions_response_json = json.loads(predictions_response.text)
+
+    # Access the picks from the JSON data
+    current_picks = predictions_response_json["result"]["picks"]
+
+    # Sort the current picks by group id
+    current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
 
     # Define a list to store the pickem embeds for each stage
     pickem_embeds = []
@@ -88,15 +111,9 @@ def getPickemInfo(api_key, event, steamID, authCode, user):
         for field in embed.fields:
             pickem_info.add_field(name=field.name, value=field.value, inline=True)
 
-    # Return the completed Embed object
-    pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", color=0xfffe0f)
 
-    # Loop through the list of pickem embeds and add each one to the new embed
-    for embed in pickem_info:
-        for field in embed.fields:
-            pickem_embed.add_field(name=field.name, value=field.value, inline=field.inline)
-
-    return pickem_embed
+        # Return the list of created embeds
+        return pickem_info
 
 
 # Function to retrive User Data from DB
