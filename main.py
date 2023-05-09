@@ -58,12 +58,6 @@ def getPickemInfo(api_key, event, steamID, authCode, user):
     getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
     tournamentLayoutResponse = requests.get(getTournamentLayout_url)
 
-    # tournamentVar_preliminary_stage_picks = tournamentVar_json["result"]["sections"][0]["groups"]
-    # tournamentVar_quarterfinals_picks = tournamentVar_json["result"]["sections"][2]["groups"]
-    # tournamentVar_semifinals_picks = tournamentVar_json["result"]["sections"][3]["groups"]
-    # tournamentVar_grand_final_picks = tournamentVar_json["result"]["sections"][4]["groups"]
-
-
     tournamentVar_json = json.loads(tournamentLayoutResponse.text)
     teams_info = tournamentVar_json["result"]["teams"]
 
@@ -83,29 +77,35 @@ def getPickemInfo(api_key, event, steamID, authCode, user):
     # Access the picks from the JSON data
     current_picks = predictions_response_json["result"]["picks"]
 
-    # create a new embed
-    pickem_embed=discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current **Challenger Round** Picks", color=0xfffe0f)
-    pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    # Sort the current picks by group id
+    current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
 
-    # add fields for the 3-0 and 0-3 picks
-    for pick in current_picks:
-        team_name = get_team_name_by_pickid(pick['pick'], teams_info)
-        if pick['index'] == 0:
-            pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
-        elif pick['index'] == 8:
-            pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+    # Define a list to store the pickem embeds for each stage
+    pickem_embeds = []
 
-    # add field for the to-advance picks
-    to_advance_picks = ""
-    for index, pick in enumerate(current_picks):
-        team_name = get_team_name_by_pickid(pick['pick'], teams_info)
-        if 1 <= pick['index'] <= 7:
-            to_advance_picks += f"{team_name}\n"
-    pickem_embed.add_field(name="To Advance Picks", value=to_advance_picks, inline=False)
-    pickem_embed.set_footer(text=f'{footerVar}')
-    
+    # Iterate through the sorted picks and create an embed for each group id
+    for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
+        # Create a new embed
+        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current {group_name} Picks", color=0xfffe0f)
+        pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
 
-    return pickem_embed
+        # Add fields for the 3-0 and 0-3 picks
+        for pick in current_picks_sorted:
+            if pick['groupid'] == groupid:
+                pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
+                team_name = get_team_name_by_pickid(pick['pick'], teams_info)
+                if pick_index == 1 and groupid == 224:
+                    pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
+                elif pick_index == 9 and groupid == 224:
+                    pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+                elif 1 <= pick_index <= 8 and groupid in [224, 225]:
+                    pickem_embed.add_field(name="To Advance Pick", value=team_name, inline=True)
+        # Append the embed to the list
+        pickem_embeds.append(pickem_embed)
+
+        # Return the list of created embeds
+        return pickem_embeds
+
 
 # Function to retrive User Data from DB
 def get_user_data(user_id):
