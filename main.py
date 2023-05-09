@@ -12,7 +12,7 @@ from discord import app_commands
 r = redis.from_url(os.environ.get("REDISCLOUD_URL"))
 steam_api_key = os.getenv("steam_api_key")
 event = os.getenv("event_id")
-version = "1.4.3"
+version = "1.4.4"
 footerVar = f"Brambles Pickem Bot - Version {version}"
 discordPressence = '"Use /showpickem"'
 
