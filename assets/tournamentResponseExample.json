@@ -1,0 +1,558 @@
+{
+        "result": {
+                "event": 21,
+                "name": "BLAST.tv Paris 2023 CS:GO Major Championship",
+                "sections": [
+                        {
+                                "sectionid": 78,
+                                "name": "Preliminary Stage | 8",
+                                "groups": [
+                                        {
+                                                "groupid": 224,
+                                                "name": "Prelim | Prelim",
+                                                "points_per_pick": 1,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 1
+                                                        },
+                                                        {
+                                                                "pickid": 59
+                                                        },
+                                                        {
+                                                                "pickid": 90
+                                                        },
+                                                        {
+                                                                "pickid": 96
+                                                        },
+                                                        {
+                                                                "pickid": 102
+                                                        },
+                                                        {
+                                                                "pickid": 115
+                                                        },
+                                                        {
+                                                                "pickid": 117
+                                                        },
+                                                        {
+                                                                "pickid": 119
+                                                        },
+                                                        {
+                                                                "pickid": 48
+                                                        },
+                                                        {
+                                                                "pickid": 61
+                                                        },
+                                                        {
+                                                                "pickid": 84
+                                                        },
+                                                        {
+                                                                "pickid": 86
+                                                        },
+                                                        {
+                                                                "pickid": 106
+                                                        },
+                                                        {
+                                                                "pickid": 111
+                                                        },
+                                                        {
+                                                                "pickid": 121
+                                                        },
+                                                        {
+                                                                "pickid": 122
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 1,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 2,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 3,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 4,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 5,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 6,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 7,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 8,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        }
+                                ]
+
+                        },
+                        {
+                                "sectionid": 79,
+                                "name": "Group Stage | 13",
+                                "groups": [
+                                        {
+                                                "groupid": 225,
+                                                "name": "Group | Group",
+                                                "points_per_pick": 3,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 1,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 2,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 3,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 4,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 5,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 6,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 7,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        },
+                                                        {
+                                                                "index": 8,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        }
+                                ]
+
+                        },
+                        {
+                                "sectionid": 80,
+                                "name": "Quarterfinals | 18",
+                                "groups": [
+                                        {
+                                                "groupid": 226,
+                                                "name": "Quarterfinal | Match 1",
+                                                "points_per_pick": 12,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        },
+                                        {
+                                                "groupid": 227,
+                                                "name": "Quarterfinal | Match 2",
+                                                "points_per_pick": 12,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        },
+                                        {
+                                                "groupid": 228,
+                                                "name": "Quarterfinal | Match 3",
+                                                "points_per_pick": 12,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        },
+                                        {
+                                                "groupid": 229,
+                                                "name": "Quarterfinal | Match 4",
+                                                "points_per_pick": 12,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        }
+                                ]
+
+                        },
+                        {
+                                "sectionid": 81,
+                                "name": "Semifinals | 20",
+                                "groups": [
+                                        {
+                                                "groupid": 230,
+                                                "name": "Semifinal | Match 1",
+                                                "points_per_pick": 10,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        },
+                                        {
+                                                "groupid": 231,
+                                                "name": "Semifinal | Match 2",
+                                                "points_per_pick": 10,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        }
+                                ]
+
+                        },
+                        {
+                                "sectionid": 82,
+                                "name": "Grand Final | 21",
+                                "groups": [
+                                        {
+                                                "groupid": 232,
+                                                "name": "GrandFinal | Final",
+                                                "points_per_pick": 7,
+                                                "picks_allowed": true,
+                                                "teams": [
+                                                        {
+                                                                "pickid": 0
+                                                        },
+                                                        {
+                                                                "pickid": 0
+                                                        }
+                                                ]
+                                                ,
+                                                "picks": [
+                                                        {
+                                                                "index": 0,
+                                                                "pickids": [
+
+                                                                ]
+
+                                                        }
+                                                ]
+
+                                        }
+                                ]
+
+                        }
+                ]
+                ,
+                "teams": [
+                        {
+                                "pickid": 1,
+                                "logo": "nip",
+                                "name": "Ninjas in Pyjamas"
+                        },
+                        {
+                                "pickid": 6,
+                                "logo": "fntc",
+                                "name": "Fnatic"
+                        },
+                        {
+                                "pickid": 12,
+                                "logo": "navi",
+                                "name": "Natus Vincere"
+                        },
+                        {
+                                "pickid": 48,
+                                "logo": "liq",
+                                "name": "Team Liquid"
+                        },
+                        {
+                                "pickid": 59,
+                                "logo": "g2",
+                                "name": "G2 Esports"
+                        },
+                        {
+                                "pickid": 61,
+                                "logo": "faze",
+                                "name": "FaZe Clan"
+                        },
+                        {
+                                "pickid": 84,
+                                "logo": "ence",
+                                "name": "ENCE"
+                        },
+                        {
+                                "pickid": 85,
+                                "logo": "furi",
+                                "name": "FURIA"
+                        },
+                        {
+                                "pickid": 86,
+                                "logo": "gray",
+                                "name": "Grayhound Gaming"
+                        },
+                        {
+                                "pickid": 89,
+                                "logo": "vita",
+                                "name": "Vitality"
+                        },
+                        {
+                                "pickid": 90,
+                                "logo": "forz",
+                                "name": "forZe eSports"
+                        },
+                        {
+                                "pickid": 95,
+                                "logo": "hero",
+                                "name": "Heroic"
+                        },
+                        {
+                                "pickid": 96,
+                                "logo": "og",
+                                "name": "OG"
+                        },
+                        {
+                                "pickid": 102,
+                                "logo": "pain",
+                                "name": "paiN Gaming"
+                        },
+                        {
+                                "pickid": 106,
+                                "logo": "mouz",
+                                "name": "MOUZ"
+                        },
+                        {
+                                "pickid": 111,
+                                "logo": "nein",
+                                "name": "9INE"
+                        },
+                        {
+                                "pickid": 121,
+                                "logo": "flux",
+                                "name": "Fluxo"
+                        },
+                        {
+                                "pickid": 122,
+                                "logo": "mngz",
+                                "name": "The MongolZ"
+                        }
+                ]
+
+        }
+}
