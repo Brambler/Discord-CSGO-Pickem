@@ -266,7 +266,7 @@ async def reauthorize(interaction: discord.Interaction):
         # Delete the existing user data
         r.hdel(str(interaction.user.id), 'user_data')
         # Call the authorize function
-        await authorize(interaction)
+        await authorize._callback(interaction)
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
