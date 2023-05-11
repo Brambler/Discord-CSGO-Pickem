@@ -280,7 +280,7 @@ async def reauthorize(interaction: discord.Interaction):
             ]
         ]
 
-        confirm_message = await interaction.response.send_message(embed=confirm_embed, components=components)
+        confirm_message = await interaction.channel.send(embed=confirm_embed, components=components)
         try:
             # Wait for the user's button interaction
             button_interaction = await client.wait_for("button_click", check=lambda i: i.user.id == interaction.user.id and i.message.id == confirm_message.id, timeout=60)
