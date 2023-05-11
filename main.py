@@ -281,7 +281,7 @@ async def reauthorize(interaction: discord.Interaction):
         ]
 
         # Create the message with components
-        confirm_message = await interaction.channel.create_message(embed=confirm_embed, view=discord.ui.View(components=components))
+        confirm_message = await interaction.channel.send(embed=confirm_embed, components=components)
         try:
             # Wait for the user's button interaction
             button_interaction = await client.wait_for("button_click", check=lambda i: i.user.id == interaction.user.id and i.message.id == confirm_message.id, timeout=60)
@@ -295,7 +295,7 @@ async def reauthorize(interaction: discord.Interaction):
             else:
                 await button_interaction.respond(content="Re-authorization cancelled.", ephemeral=True)
         except asyncio.TimeoutError:
-            await confirm_message.edit(view=None)
+            await confirm_message.edit(components=None)
             await interaction.response.send_message(content="Confirmation timeout. Re-authorization cancelled.", ephemeral=True)
     else:
         NotAuthed_embed = discord.Embed(
