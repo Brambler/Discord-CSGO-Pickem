@@ -286,9 +286,6 @@ async def reauthorize(interaction: discord.Interaction):
     user_data_str = r.hget(str(interaction.user.id), 'user_data')
 
     if user_data_str:
-        # # Delete the existing user data
-        # r.hdel(str(interaction.user.id), 'user_data')
-
         # Create an instance of ConfirmationView and send the confirmation message
         confirm_view = ConfirmationView(interaction)
         confirm_embed = discord.Embed(
@@ -299,6 +296,8 @@ async def reauthorize(interaction: discord.Interaction):
         confirm_embed.set_footer(text=footerVar)
 
         await interaction.response.send_message(embed=confirm_embed, ephemeral=True, view=confirm_view)
+        # Delete the existing user data
+        r.hdel(str(interaction.user.id), 'user_data')
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
