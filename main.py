@@ -149,7 +149,7 @@ class ReAuthConfirmationView(discord.ui.View):
 
     @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary, emoji="✅")
     async def confirm_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        if interaction.user.id == self.interaction.user.id:
+        if interaction.user.id:
             # User confirmed, proceed with re-authorization
             await interaction.response.defer(ephemeral=True)
             # Call the authorize function
@@ -161,7 +161,7 @@ class ReAuthConfirmationView(discord.ui.View):
 
     @discord.ui.button(label="Cancel", style=discord.ButtonStyle.danger, emoji="❌")
     async def cancel_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        if interaction.user.id == self.interaction.user.id:
+        if interaction.user.id:
             # User canceled, no further action required
             await interaction.response.send_message("Re-authorization canceled.", ephemeral=True)
         else:
