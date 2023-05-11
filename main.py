@@ -152,8 +152,6 @@ class ReAuthConfirmationView(discord.ui.View):
         if interaction.user.id == self.interaction.user.id:
             # User confirmed, proceed with re-authorization
             await interaction.response.defer(ephemeral=True)
-            # Delete the existing user data
-            r.hdel(str(interaction.user.id), 'user_data')
             # Call the authorize function
             await interaction.response.send_message("Your data has been reset.", ephemeral=True)
             await authorize._callback(self.interaction)
@@ -291,26 +289,37 @@ async def reauthorize(interaction: discord.Interaction):
     await client.change_presence(activity=discord.Game("Checking Auth"))
     print(f'Setting Presence to "Checking Auth"')
     user_data_str = r.hget(str(interaction.user.id), 'user_data')
-
     if user_data_str:
-        # Create an instance of ConfirmationView and send the confirmation message
-        confirm_view = ReAuthConfirmationView(interaction)
+        # Ask for confirmation
         confirm_embed = discord.Embed(
-            title='Confirmation',
-            description='Are you sure you want to re-authorize your Steam profile?',
-            color=discord.Color.orange()
+            title="Confirmation",
+            description="Are you sure you want to re-authorize your account? This will delete your existing data.",
+            color=0xff0000
         )
-        confirm_embed.set_footer(text=footerVar)
-
-        await interaction.response.send_message(embed=confirm_embed, ephemeral=True, view=confirm_view)
+        confirm_message = await interaction.channel.send(embed=confirm_embed, view=ReAuthConfirmationView(interaction))
+        def check_confirm(inter):
+            return inter.message.id == confirm_message.id and inter.user.id == interaction.user.id
+        try:
+            confirm_interaction = await client.wait_for("button_click", check=check_confirm, timeout=60)
+        except asyncio.TimeoutError:
+            await confirm_message.edit(content="Confirmation timed out.", view=None)
+            return
+        # User confirmed the action
+        if confirm_interaction.component.label == "Confirm":
+            # Delete the existing user data
+            r.hdel(str(interaction.user.id), 'user_data')
+            await confirm_message.edit(content="Your data has been deleted.")
+        else:
+            await confirm_message.edit(content="Action canceled.")
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
             description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
-            color=discord.Color.red()
+            color=0xff0000
         )
-        NotAuthed_embed.set_footer(text=footerVar)
+        NotAuthed_embed.set_footer(text=f'{footerVar}')
         await interaction.response.send_message(embed=NotAuthed_embed, ephemeral=True)
+        return
 
 
 #######################
