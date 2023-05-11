@@ -263,10 +263,39 @@ async def reauthorize(interaction: discord.Interaction):
     print(f'Setting Pressence to "Checking Auth"')
     user_data_str = r.hget(str(interaction.user.id), 'user_data')
     if user_data_str:
-        # Delete the existing user data
-        r.hdel(str(interaction.user.id), 'user_data')
-        # Call the authorize function
-        await authorize._callback(interaction)
+        # Confirmation dialog
+        confirm_embed = discord.Embed(
+            title='Confirmation',
+            description='Are you sure you want to re-authorize your Steam profile?\n'
+                        'This will delete your existing authorization and require you to authorize again.',
+            color=0xff0000
+        )
+        confirm_embed.set_footer(text=f'{footerVar}')
+
+        # Create components for the confirmation buttons
+        components = [
+            [
+                discord.ui.Button(style=discord.ButtonStyle.primary, label="Confirm"),
+                discord.ui.Button(style=discord.ButtonStyle.secondary, label="Cancel"),
+            ]
+        ]
+
+        confirm_message = await interaction.response.send_message(embed=confirm_embed, components=components)
+        try:
+            # Wait for the user's button interaction
+            button_interaction = await client.wait_for("button_click", check=lambda i: i.user.id == interaction.user.id and i.message.id == confirm_message.id, timeout=60)
+
+            # Check which button was clicked
+            if button_interaction.component.label == "Confirm":
+                # Delete the existing user data
+                r.hdel(str(interaction.user.id), 'user_data')
+                # Call the underlying coroutine function associated with the authorize command
+                await authorize._callback(interaction)
+            else:
+                await button_interaction.respond(content="Re-authorization cancelled.", ephemeral=True)
+        except asyncio.TimeoutError:
+            await confirm_message.edit(components=None)
+            await interaction.response.send_message(content="Confirmation timeout. Re-authorization cancelled.", ephemeral=True)
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
@@ -276,6 +305,7 @@ async def reauthorize(interaction: discord.Interaction):
         NotAuthed_embed.set_footer(text=f'{footerVar}')
         await interaction.response.send_message(embed=NotAuthed_embed, ephemeral=True)
         return
+
 
 #######################
 ##/showpickem COMMAND##
