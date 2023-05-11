@@ -290,28 +290,23 @@ async def reauthorize(interaction: discord.Interaction):
     await client.change_presence(activity=discord.Game("Checking Auth"))
     print(f'Setting Presence to "Checking Auth"')
     user_data_str = r.hget(str(interaction.user.id), 'user_data')
-
     if user_data_str:
-        # Create an instance of ConfirmationView and send the confirmation message
-        confirm_view = ConfirmationView(interaction)
-        confirm_embed = discord.Embed(
-            title='Confirmation',
-            description='Are you sure you want to re-authorize your Steam profile?',
-            color=discord.Color.orange()
-        )
-        confirm_embed.set_footer(text=footerVar)
-
-        await interaction.response.send_message(embed=confirm_embed, ephemeral=True, view=confirm_view)
         # Delete the existing user data
         r.hdel(str(interaction.user.id), 'user_data')
+        # Call the authorize function
+        await authorize._callback(interaction)
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
             description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
-            color=discord.Color.red()
+            color=0xff0000
         )
-        NotAuthed_embed.set_footer(text=footerVar)
+        NotAuthed_embed.set_footer(text=f'{footerVar}')
         await interaction.response.send_message(embed=NotAuthed_embed, ephemeral=True)
+        return
+
+    # Code following the removal of user data
+    await interaction.response.send_message("Re-authorization successful!", ephemeral=True)
 
 
 #######################
