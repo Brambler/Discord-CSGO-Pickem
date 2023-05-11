@@ -142,7 +142,7 @@ class MyClient(discord.Client):
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
 
-class ConfirmationView(discord.ui.View):
+class ReAuthConfirmationView(discord.ui.View):
     def __init__(self, interaction):
         super().__init__(timeout=900.0)
         self.interaction = interaction
@@ -152,7 +152,10 @@ class ConfirmationView(discord.ui.View):
         if interaction.user.id == self.interaction.user.id:
             # User confirmed, proceed with re-authorization
             await interaction.response.defer(ephemeral=True)
+            # Delete the existing user data
+            r.hdel(str(interaction.user.id), 'user_data')
             # Call the authorize function
+            await interaction.response.send_message("Your data has been reset.", ephemeral=True)
             await authorize._callback(self.interaction)
         else:
             # User is not the one who initiated the confirmation
@@ -166,8 +169,6 @@ class ConfirmationView(discord.ui.View):
         else:
             # User is not the one who initiated the confirmation
             await interaction.response.send_message("You are not authorized to cancel this action.", ephemeral=True)
-
-
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
@@ -293,7 +294,7 @@ async def reauthorize(interaction: discord.Interaction):
 
     if user_data_str:
         # Create an instance of ConfirmationView and send the confirmation message
-        confirm_view = ConfirmationView(interaction)
+        confirm_view = ReAuthConfirmationView(interaction)
         confirm_embed = discord.Embed(
             title='Confirmation',
             description='Are you sure you want to re-authorize your Steam profile?',
@@ -302,8 +303,6 @@ async def reauthorize(interaction: discord.Interaction):
         confirm_embed.set_footer(text=footerVar)
 
         await interaction.response.send_message(embed=confirm_embed, ephemeral=True, view=confirm_view)
-        # Delete the existing user data
-        r.hdel(str(interaction.user.id), 'user_data')
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
@@ -354,11 +353,5 @@ async def showpickem(interaction: discord.Interaction):
     await client.change_presence(activity=discord.Game("Use /showpickem"))
     print(f'Setting Pressence to "Use /showpickem"')
     await interaction.channel.send(embed=pickem_info_str)
-
-
-
-
-
-
 
 client.run(os.getenv("discordToken"))
