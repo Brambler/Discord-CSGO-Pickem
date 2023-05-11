@@ -144,23 +144,29 @@ class MyClient(discord.Client):
 
 class ConfirmationView(discord.ui.View):
     def __init__(self, interaction):
-        super().__init__(timeout=None)
+        super().__init__(timeout=900.0)
         self.interaction = interaction
 
-    @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary)
-    async def confirm_button(self, button, interaction):
+    @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary, emoji="✅")
+    async def confirm_button(self, button: discord.ui.Button, interaction: discord.Interaction):
         if interaction.user.id == self.interaction.user.id:
-            await self.cleanup()
+            # User confirmed, proceed with re-authorization
             await interaction.response.defer(ephemeral=True)
-            await self.interaction.channel.send("Re-authorization confirmed!")
+            # Call the authorize function
             await authorize._callback(self.interaction)
+        else:
+            # User is not the one who initiated the confirmation
+            await interaction.response.send_message("You are not authorized to confirm this action.", ephemeral=True)
 
-    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.secondary)
-    async def cancel_button(self, button, interaction):
+    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.danger, emoji="❌")
+    async def cancel_button(self, button: discord.ui.Button, interaction: discord.Interaction):
         if interaction.user.id == self.interaction.user.id:
-            await self.cleanup()
-            await interaction.response.defer(ephemeral=True)
-            await self.interaction.channel.send("Re-authorization cancelled.")
+            # User canceled, no further action required
+            await interaction.response.send_message("Re-authorization canceled.", ephemeral=True)
+        else:
+            # User is not the one who initiated the confirmation
+            await interaction.response.send_message("You are not authorized to cancel this action.", ephemeral=True)
+
 
 
 intents = discord.Intents.default()
