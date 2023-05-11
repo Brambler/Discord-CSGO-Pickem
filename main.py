@@ -12,7 +12,7 @@ from discord import app_commands
 r = redis.from_url(os.environ.get("REDISCLOUD_URL"))
 steam_api_key = os.getenv("steam_api_key")
 event = os.getenv("event_id")
-version = "1.4.4"
+version = "1.4.5"
 footerVar = f"Brambles Pickem Bot - Version {version}"
 discordPressence = '"Use /showpickem"'
 
@@ -251,6 +251,33 @@ async def authorize(interaction: discord.Interaction):
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
 #######################
+##/reauthorize COMMAND#
+#######################
+
+@client.tree.command()
+async def reauthorize(interaction: discord.Interaction):
+    """Used to Re-authorize your Steam Profile to be used with this bot."""
+
+    # Check if the user has already authorized
+    await client.change_presence(activity=discord.Game("Checking Auth"))
+    print(f'Setting Pressence to "Checking Auth"')
+    user_data_str = r.hget(str(interaction.user.id), 'user_data')
+    if user_data_str:
+        # Delete the existing user data
+        r.hdel(str(interaction.user.id), 'user_data')
+        # Call the authorize function
+        await authorize(interaction)
+    else:
+        NotAuthed_embed = discord.Embed(
+            title='Not Authorized!',
+            description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
+            color=0xff0000
+        )
+        NotAuthed_embed.set_footer(text=f'{footerVar}')
+        await interaction.response.send_message(embed=NotAuthed_embed, ephemeral=True)
+        return
+
+#######################
 ##/showpickem COMMAND##
 #######################
 
@@ -290,5 +317,11 @@ async def showpickem(interaction: discord.Interaction):
     await client.change_presence(activity=discord.Game("Use /showpickem"))
     print(f'Setting Pressence to "Use /showpickem"')
     await interaction.channel.send(embed=pickem_info_str)
+
+
+
+
+
+
 
 client.run(os.getenv("discordToken"))
