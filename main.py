@@ -147,7 +147,7 @@ class ConfirmationView(discord.ui.View):
         super().__init__(timeout=900.0)
         self.interaction = interaction
 
-    @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary, emoji="✅")
+    @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary)
     async def confirm_button(self, button: discord.ui.Button, interaction: discord.Interaction):
         if interaction.user.id == self.interaction.user.id:
             # User confirmed, proceed with re-authorization
@@ -158,7 +158,7 @@ class ConfirmationView(discord.ui.View):
             # User is not the one who initiated the confirmation
             await interaction.response.send_message("You are not authorized to confirm this action.", ephemeral=True)
 
-    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.danger, emoji="❌")
+    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.danger)
     async def cancel_button(self, button: discord.ui.Button, interaction: discord.Interaction):
         if interaction.user.id == self.interaction.user.id:
             # User canceled, no further action required
