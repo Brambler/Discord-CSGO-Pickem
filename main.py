@@ -142,10 +142,32 @@ class MyClient(discord.Client):
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
 
+class ConfirmationView(discord.ui.View):
+    def __init__(self, interaction):
+        super().__init__(timeout=None)
+        self.interaction = interaction
+
+    @discord.ui.button(label="Confirm", style=discord.ButtonStyle.primary)
+    async def confirm_button(self, button, interaction):
+        if interaction.user.id == self.interaction.user.id:
+            await self.cleanup()
+            await interaction.response.defer(ephemeral=True)
+            await self.interaction.channel.send("Re-authorization confirmed!")
+            await authorize._callback(self.interaction)
+
+    @discord.ui.button(label="Cancel", style=discord.ButtonStyle.secondary)
+    async def cancel_button(self, button, interaction):
+        if interaction.user.id == self.interaction.user.id:
+            await self.cleanup()
+            await interaction.response.defer(ephemeral=True)
+            await self.interaction.channel.send("Re-authorization cancelled.")
+
+
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
 
 @client.event
+
 async def on_ready():
     await client.change_presence(activity=discord.Game(discordPressence))
     print('------------------------------')
@@ -260,52 +282,31 @@ async def reauthorize(interaction: discord.Interaction):
 
     # Check if the user has already authorized
     await client.change_presence(activity=discord.Game("Checking Auth"))
-    print(f'Setting Pressence to "Checking Auth"')
+    print(f'Setting Presence to "Checking Auth"')
     user_data_str = r.hget(str(interaction.user.id), 'user_data')
+
     if user_data_str:
-        # Confirmation dialog
+        # # Delete the existing user data
+        # r.hdel(str(interaction.user.id), 'user_data')
+
+        # Create an instance of ConfirmationView and send the confirmation message
+        confirm_view = ConfirmationView(interaction)
         confirm_embed = discord.Embed(
             title='Confirmation',
-            description='Are you sure you want to re-authorize your Steam profile?\n'
-                        'This will delete your existing authorization and require you to authorize again.',
-            color=0xff0000
+            description='Are you sure you want to re-authorize your Steam profile?',
+            color=discord.Color.orange()
         )
-        confirm_embed.set_footer(text=f'{footerVar}')
+        confirm_embed.set_footer(text=footerVar)
 
-        # Create components for the confirmation buttons
-        components = [
-            [
-                discord.ui.Button(style=discord.ButtonStyle.primary, label="Confirm"),
-                discord.ui.Button(style=discord.ButtonStyle.secondary, label="Cancel"),
-            ]
-        ]
-
-        # Create the message with components
-        confirm_message = await interaction.channel.send(embed=confirm_embed, components=components)
-        try:
-            # Wait for the user's button interaction
-            button_interaction = await client.wait_for("button_click", check=lambda i: i.user.id == interaction.user.id and i.message.id == confirm_message.id, timeout=60)
-
-            # Check which button was clicked
-            if button_interaction.component.label == "Confirm":
-                # Delete the existing user data
-                r.hdel(str(interaction.user.id), 'user_data')
-                # Call the underlying coroutine function associated with the authorize command
-                await authorize._callback(interaction)
-            else:
-                await button_interaction.respond(content="Re-authorization cancelled.", ephemeral=True)
-        except asyncio.TimeoutError:
-            await confirm_message.edit(components=None)
-            await interaction.response.send_message(content="Confirmation timeout. Re-authorization cancelled.", ephemeral=True)
+        await interaction.response.send_message(embed=confirm_embed, ephemeral=True, view=confirm_view)
     else:
         NotAuthed_embed = discord.Embed(
             title='Not Authorized!',
             description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
-            color=0xff0000
+            color=discord.Color.red()
         )
-        NotAuthed_embed.set_footer(text=f'{footerVar}')
+        NotAuthed_embed.set_footer(text=footerVar)
         await interaction.response.send_message(embed=NotAuthed_embed, ephemeral=True)
-        return
 
 
 #######################
