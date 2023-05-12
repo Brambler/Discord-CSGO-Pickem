@@ -8,7 +8,6 @@ import redis
 from redis.commands.json.path import Path
 from typing import Optional
 from discord import app_commands
-from discord.ui import select, SelectOption
 
 r = redis.from_url(os.environ.get("REDISCLOUD_URL"))
 steam_api_key = os.getenv("steam_api_key")
