@@ -49,10 +49,10 @@ def get_steam_id(profile_url: str) -> Optional[str]:
         steam_id_64 = re.search(r'/profiles/(\d+)', profile_url).group(1)
         return steam_id_64
 
-# Function to get user's pickem
-def getPickemInfo(api_key, event, steamID, authCode, user):
+# Function to get user's Challenger pickem
+def getChallengerPickem(api_key, event, steamID, authCode, user):
     '''
-    Used to get Users Pickems
+    Used to get Users Chellenger Pickems
     Usage: getPickemInfo(api_key, event, steamID, authCode, user)
     '''
     getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
@@ -99,12 +99,12 @@ def getPickemInfo(api_key, event, steamID, authCode, user):
                 pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
             elif pick_index == 9 and groupid == 224:
                 pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
-            elif 1 <= pick_index <= 8 and groupid in [224, 225]:
+            elif 1 <= pick_index <= 8 and groupid in [224]:
                 to_advance_picks.append(team_name)
 
     # Add a single field for all the To Advance picks
     if to_advance_picks:
-        pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=True)
+        pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
 
         # Add the completed embed to the pickem_embeds list
         pickem_embeds.append(pickem_embed)
@@ -120,6 +120,147 @@ def getPickemInfo(api_key, event, steamID, authCode, user):
         # Return the list of created embeds
         return pickem_info
 
+# Function to get user's Legends pickem
+def getLegendsPickem(api_key, event, steamID, authCode, user):
+    '''
+    Used to get Users Chellenger Pickems
+    Usage: getPickemInfo(api_key, event, steamID, authCode, user)
+    '''
+    getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
+    tournamentLayoutResponse = requests.get(getTournamentLayout_url)
+
+    tournamentVar_json = json.loads(tournamentLayoutResponse.text)
+    teams_info = tournamentVar_json["result"]["teams"]
+
+    # Define a function to get the team name by pickid
+    def get_team_name_by_pickid(pickid, teams):
+        for team in teams:
+            if team["pickid"] == pickid:
+                return team["name"]
+        return None
+
+    # Get user Predictions
+    getPredictions_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentPredictions/v1?key={api_key}&event={event}&steamid={steamID}&steamidkey={authCode}"
+
+    predictions_response = requests.get(getPredictions_url)
+    predictions_response_json = json.loads(predictions_response.text)
+
+    # Access the picks from the JSON data
+    current_picks = predictions_response_json["result"]["picks"]
+
+    # Sort the current picks by group id
+    current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
+
+    # Define a list to store the pickem embeds for each stage
+    pickem_embeds = []
+
+    # Iterate through the sorted picks and create an embed for each group id
+    for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
+        # Create a new embed
+        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current {group_name} Picks", color=0xfffe0f)
+        pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+
+    # Add fields for the 3-0 and 0-3 picks and To Advance picks
+    to_advance_picks = []
+    for pick in current_picks_sorted:
+        if pick['groupid'] == groupid:
+            pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
+            team_name = get_team_name_by_pickid(pick['pick'], teams_info)
+            if pick_index == 1 and groupid == 225:
+                pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
+            elif pick_index == 9 and groupid == 225:
+                pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+            elif 1 <= pick_index <= 8 and groupid in [225]:
+                to_advance_picks.append(team_name)
+
+    # Add a single field for all the To Advance picks
+    if to_advance_picks:
+        pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
+
+        # Add the completed embed to the pickem_embeds list
+        pickem_embeds.append(pickem_embed)
+
+    # Merge all the pickem_embeds into a single Embed object
+    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Pick'em", color=0xfffe0f)
+    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    for embed in pickem_embeds:
+        for field in embed.fields:
+            pickem_info.add_field(name=field.name, value=field.value, inline=True)
+
+
+        # Return the list of created embeds
+        return pickem_info
+
+# Function to get user's Legends pickem
+def getChampionPickem(api_key, event, steamID, authCode, user):
+    '''
+    Used to get Users Chellenger Pickems
+    Usage: getPickemInfo(api_key, event, steamID, authCode, user)
+    '''
+    getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
+    tournamentLayoutResponse = requests.get(getTournamentLayout_url)
+
+    tournamentVar_json = json.loads(tournamentLayoutResponse.text)
+    teams_info = tournamentVar_json["result"]["teams"]
+
+    # Define a function to get the team name by pickid
+    def get_team_name_by_pickid(pickid, teams):
+        for team in teams:
+            if team["pickid"] == pickid:
+                return team["name"]
+        return None
+
+    # Get user Predictions
+    getPredictions_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentPredictions/v1?key={api_key}&event={event}&steamid={steamID}&steamidkey={authCode}"
+
+    predictions_response = requests.get(getPredictions_url)
+    predictions_response_json = json.loads(predictions_response.text)
+
+    # Access the picks from the JSON data
+    current_picks = predictions_response_json["result"]["picks"]
+
+    # Sort the current picks by group id
+    current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
+
+    # Define a list to store the pickem embeds for each stage
+    pickem_embeds = []
+
+    # Iterate through the sorted picks and create an embed for each group id
+    for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
+        # Create a new embed
+        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current {group_name} Picks", color=0xfffe0f)
+        pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+
+    # Add fields for the 3-0 and 0-3 picks and To Advance picks
+    to_advance_picks = []
+    for pick in current_picks_sorted:
+        if pick['groupid'] == groupid:
+            pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
+            team_name = get_team_name_by_pickid(pick['pick'], teams_info)
+            if pick_index == 1 and groupid == 225:
+                pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
+            elif pick_index == 9 and groupid == 225:
+                pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+            elif 1 <= pick_index <= 8 and groupid in [225]:
+                to_advance_picks.append(team_name)
+
+    # Add a single field for all the To Advance picks
+    if to_advance_picks:
+        pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
+
+        # Add the completed embed to the pickem_embeds list
+        pickem_embeds.append(pickem_embed)
+
+    # Merge all the pickem_embeds into a single Embed object
+    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Pick'em", color=0xfffe0f)
+    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    for embed in pickem_embeds:
+        for field in embed.fields:
+            pickem_info.add_field(name=field.name, value=field.value, inline=True)
+
+
+        # Return the list of created embeds
+        return pickem_info
 
 # Function to retrive User Data from DB
 def get_user_data(user_id):
@@ -274,6 +415,27 @@ async def authorize(interaction: discord.Interaction):
 @client.tree.command()
 async def showpickem(interaction: discord.Interaction):
     """Displays the user's Pick'em information."""
-    await interaction.response.send_message("Pickem Options:", view=client.view)
+    # Get the user's data from the Redis database
+    user_data = get_user_data(interaction.user.id)
+    if not user_data:
+        embed = discord.Embed(
+            title='Not Authorized!',
+            description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
+            color=0xff0000
+        )
+        embed.set_footer(text=f'{footerVar}')
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+        return
+
+    # Get the user's input value
+    input_value = interaction.data['options'][0]['value']
+
+    # Call the corresponding function based on the input value
+    if input_value.lower() == "challenger":
+        await getChallengerPickem(interaction, user_data)
+    elif input_value.lower() == "legends":
+        await getLegendsPickem(interaction, user_data)
+    elif input_value.lower() == "champion":
+        await getChampionPickem(interaction, user_data)
 
 client.run(os.getenv("discordToken"))
