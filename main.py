@@ -116,7 +116,7 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     for embed in pickem_embeds:
         for field in embed.fields:
             pickem_info.add_field(name=field.name, value=field.value, inline=True)
-
+    print(pickem_info)
 
         # Return the list of created embeds
         return pickem_info
