@@ -412,7 +412,7 @@ async def authorize(interaction: discord.Interaction):
 ###########################
 
 @client.tree.command()
-async def showpickem(interaction: discord.Interaction):
+async def showchallenger(interaction: discord.Interaction):
     """Displays the user's Pick'em information."""
     # Get the user's data from the Redis database
     user_data = get_user_data(interaction.user.id)
@@ -453,7 +453,7 @@ async def showpickem(interaction: discord.Interaction):
 ###########################
 
 @client.tree.command()
-async def showpickem(interaction: discord.Interaction):
+async def showlegends(interaction: discord.Interaction):
     """Displays the user's Pick'em information."""
     # Get the user's data from the Redis database
     user_data = get_user_data(interaction.user.id)
@@ -494,7 +494,7 @@ async def showpickem(interaction: discord.Interaction):
 ###########################
 
 @client.tree.command()
-async def showpickem(interaction: discord.Interaction):
+async def showchampion(interaction: discord.Interaction):
     """Displays the user's Pick'em information."""
     # Get the user's data from the Redis database
     user_data = get_user_data(interaction.user.id)
