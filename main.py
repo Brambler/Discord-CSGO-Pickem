@@ -426,15 +426,28 @@ async def showpickem(interaction: discord.Interaction):
         await interaction.response.send_message(embed=embed, ephemeral=True)
         return
 
-    # Get the user's input value
-    input_value = interaction.data['options'][0]['value']
+    # Get the user's input value (e.g., "challenger")
+    input_value = interaction.data['options'][0]['value'].lower()
 
-    # Call the corresponding function based on the input value
-    if input_value.lower() == "challenger":
-        await getChallengerPickem(interaction, user_data)
-    elif input_value.lower() == "legends":
-        await getLegendsPickem(interaction, user_data)
-    elif input_value.lower() == "champion":
-        await getChampionPickem(interaction, user_data)
+    if input_value == 'challenger':
+        pickem_info = getChallengerPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], interaction.user.name)
+    elif input_value == 'legends':
+        pickem_info = getLegendsPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], interaction.user.name)
+    elif input_value == 'champion':
+        pickem_info = getChampionPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], interaction.user.name)
+    else:
+        # Handle invalid input
+        embed = discord.Embed(
+            title='Invalid Stage!',
+            description='Please select a valid stage: `challenger`, `legends`, or `champion`.',
+            color=0xff0000
+        )
+        embed.set_footer(text=f'{footerVar}')
+        await interaction.response.send_message(embed=embed, ephemeral=True)
+        return
+
+    # Send the pickem information as an embed
+    await interaction.response.send_message(embed=pickem_info, ephemeral=True)
+
 
 client.run(os.getenv("discordToken"))
