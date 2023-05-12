@@ -54,6 +54,8 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     Used to get Users Chellenger Pickems
     Usage: getPickemInfo(api_key, event, steamID, authCode, user)
     '''
+
+    print(f"CURRENT VARS {api_key, event, steamID, authCode, user}")
     getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
     tournamentLayoutResponse = requests.get(getTournamentLayout_url)
 
@@ -433,7 +435,6 @@ async def showchallenger(interaction: discord.Interaction):
     print(f'Setting Pressence to "Retrieving Pickem for {user_username}"')
     
     pickem_info = getChallengerPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], user_username)
-
     # Format the pickem_info as a string
     pickem_info_str = pickem_info
 
