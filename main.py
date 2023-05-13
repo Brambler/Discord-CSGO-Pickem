@@ -113,7 +113,6 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     print(pickem_info)
     return pickem_info
 
-
 # Function to get user's Legends pickem
 def getLegendsPickem(api_key, event, steamID, authCode, user):
     '''
@@ -178,8 +177,6 @@ def getLegendsPickem(api_key, event, steamID, authCode, user):
     # Return the list of created embeds
     print(pickem_info)
     return pickem_info
-
-
 
 # Function to retrive User Data from DB
 def get_user_data(user_id):
@@ -406,14 +403,6 @@ async def showlegends(interaction: discord.Interaction):
     await client.change_presence(activity=discord.Game("Use /showpickem"))
     print(f'Setting Pressence to "Use /showpickem"')
     await interaction.channel.send(embed=pickem_info_str)
-    # After sending the bot's response message
-    bot_response = await interaction.response.send_message(embed=pickemResponse_embed, ephemeral=True)
-
-    # Delete the message after 10 seconds
-    await asyncio.sleep(10)
-    await bot_response.delete()
-
-       
 
 
 client.run(os.getenv("discordToken"))
