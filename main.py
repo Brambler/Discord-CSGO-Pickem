@@ -53,7 +53,7 @@ class MyView(discord.ui.View):
         print(f"SELF: {self}")
         print('------------------------------')
         print('------------------------------')
-        print(f"SELECT: {select}")
+        print(f"SELECT: {select.values[0]}")
         print('------------------------------')
         print('------------------------------')
         print(f"INTERACTION: {interaction}")
