@@ -122,7 +122,7 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
     for embed in pickem_embeds:
         for field in embed.fields:
-            pickem_info.add_field(name=field.name, value=field.value, inline=True)
+            pickem_info.add_field(name=field.name, value=field.value, inline=False)
 
     # Return the list of created embeds
     print(pickem_info)
@@ -163,8 +163,6 @@ class MyClient(discord.Client):
         # This copies the global commands over to your guild.
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
-
-
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
