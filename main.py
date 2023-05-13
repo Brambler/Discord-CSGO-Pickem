@@ -72,6 +72,7 @@ async def on_ready():
 
 
 # Multiple Choice
+@client.tree.command()
 async def test(interaction: discord.Interaction):
     """Used to test a multiplechoice command"""
     await interaction.response.send_message("Please select an option:", ephemeral=True, view=MyView())
