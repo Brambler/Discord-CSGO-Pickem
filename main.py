@@ -225,6 +225,14 @@ class Select(discord.ui.Select):
             pickem_info = getChallengerPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], user_username)
             # Format the pickem_info as a string
             pickem_info_str = pickem_info
+
+            pickemResponse_embed = discord.Embed(
+                    title='Pickem Retrieved!',
+                    description='*Only you can see this message*\n\nBelow is your pickem!\n**Your Pick\'em is now shown to everyone in this channel**\n\n*Thanks for using my bot <3*',
+                    color=0x00ff00
+                )
+            pickemResponse_embed.set_footer(text=f'{footerVar}')
+            await interaction.response.send_message(embed=pickemResponse_embed, ephemeral=True)
             await client.change_presence(activity=discord.Game("Use /showpickem"))
             print(f'Setting Pressence to "Use /showpickem"')
             await interaction.channel.send(embed=pickem_info_str)
@@ -367,6 +375,6 @@ async def authorize(interaction: discord.Interaction):
 
 @client.tree.command()
 async def showpickem(interaction: discord.Interaction):
-    await interaction.response.send_message("Choose a flavor!", ephemeral=True, view=SelectView())
+    await interaction.response.send_message("Choose a Pickem Stage", ephemeral=True, view=SelectView())
 
 client.run(os.getenv("discordToken"))
