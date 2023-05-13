@@ -44,20 +44,9 @@ class MyClient(discord.Client):
         await self.tree.sync(guild=MY_GUILD)
 
 class MyView(discord.ui.View):
-    def __init__(self):
-        super().__init__(timeout=None)
-
-    @discord.ui.button(label="Option 1", custom_id="option1", style=discord.ButtonStyle.primary)
-    async def option1_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await button.interaction.response.send_message("Option 1 selected", ephemeral=True)
-
-    @discord.ui.button(label="Option 2", custom_id="option2", style=discord.ButtonStyle.primary)
-    async def option2_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await button.interaction.response.send_message("Option 2 selected", ephemeral=True)
-
-    @discord.ui.button(label="Option 3", custom_id="option3", style=discord.ButtonStyle.primary)
-    async def option3_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await button.interaction.response.send_message("Option 3 selected", ephemeral=True)
+    @discord.ui.button(label="Click me!", style=discord.ButtonStyle.success)
+    async def button_callback(self, button, interaction):
+        await interaction.response.send_message("You clicked the button!")
 
 
 intents = discord.Intents.default()
