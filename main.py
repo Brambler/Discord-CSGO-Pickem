@@ -20,34 +20,13 @@ discordPressence = '"Use /showpickem"'
 MY_GUILD = discord.Object(id=os.getenv("discordGuildID"))  # replace with your guild id
 
 class MyClient(discord.Client):
-    '''
-    A CommandTree is a special type that holds all the application command
-    state required to make it work. This is a separate class because it
-    allows all the extra state to be opt-in.
-    Whenever you want to work with application commands, your tree is used
-    to store and work with them.
-    Note: When using commands.Bot instead of discord.Client, the bot will
-    maintain its own tree instead.
-    '''
     def __init__(self, *, intents: discord.Intents):
-        '''
-        In this basic example, we just synchronize the app commands to one guild.
-        Instead of specifying a guild to every command, we copy over our global commands instead.
-        By doing so, we don't have to wait up to an hour until they are shown to the end-user.
-        '''
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
-
+        
     async def setup_hook(self):
-        # This copies the global commands over to your guild.
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
-
-class MyView(discord.ui.View):
-    @discord.ui.button(label="Click me!", style=discord.ButtonStyle.success)
-    async def button_callback(self, button, interaction):
-        await interaction.response.send_message("You clicked the button!", ephemeral=True)
-
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
@@ -59,12 +38,19 @@ async def on_ready():
     print(f'Logged in as {client.user} (ID: {client.user.id})\nBot Version {version}\nCurrent Pressence: {discordPressence}')
     print('------------------------------')
 
+class MyView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
 
-# Multiple Choice
+    @discord.ui.button(label="Click me!", style=discord.ButtonStyle.success)
+    async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.send_message("You clicked the button!", ephemeral=True)
+
 @client.tree.command()
 async def test(interaction: discord.Interaction):
-    """Used to test a multiplechoice command"""
-    await interaction.response.send_message("Please select an option:", ephemeral=True, view=MyView().add_item(MyView().button_callback))
+    view = MyView()
+    view.add_item(view.button_callback)
+    await interaction.response.send_message("Please select an option:", ephemeral=True, view=view)
 
 
 client.run(os.getenv("discordToken"))
