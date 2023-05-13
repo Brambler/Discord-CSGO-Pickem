@@ -49,7 +49,7 @@ class MyView(discord.ui.View):
         ]
     )
     async def select_callback(self, select, interaction):
-        await interaction.send(f"Awesome! I like {select.values[0]} too!", ephemeral=True)
+        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!", ephemeral=True)
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
@@ -63,6 +63,6 @@ async def on_ready():
 
 @client.tree.command()
 async def flavor(interaction: discord.Interaction):
-    await interaction.send("Choose a flavor!", ephemeral=True, view=MyView())
+    await interaction.response.send_message("Choose a flavor!", ephemeral=True, view=MyView())
 
 client.run(os.getenv("discordToken"))
