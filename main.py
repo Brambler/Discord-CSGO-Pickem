@@ -2,60 +2,49 @@ import discord
 import discord.ui
 import os
 
-version = "1.5_dev"
-discordPressence = '"Use /showpickem"'
-footerVar = f"Brambles Pickem Bot - Version {version}"
-MY_GUILD = discord.Object(id=os.getenv("discordGuildID"))
-
-
-class MyClient(discord.Client):
-    def __init__(self, *, intents: discord.Intents):
-        super().__init__(intents=intents)
-        self.tree = discord.app_commands.CommandTree(self)
-
-    async def setup_hook(self):
-        self.tree.copy_global_to(guild=MY_GUILD)
-        await self.tree.sync(guild=MY_GUILD)
-
-
-intents = discord.Intents.default()
-client = MyClient(intents=intents)
-
-
-@client.event
-async def on_ready():
-    await client.change_presence(activity=discord.Game(discordPressence))
-    print('------------------------------')
-    print(f'Logged in as {client.user} (ID: {client.user.id})\nBot Version {version}\nCurrent Presence: {discordPressence}')
-    print('------------------------------')
-
+bot = discord.Bot()
 
 class MyView(discord.ui.View):
     def __init__(self):
-        super().__init__(timeout=None)
-
-        # Create a single button with a unique custom ID
-        self.button = discord.ui.Button(label="Click me!", style=discord.ButtonStyle.success, custom_id="my_button")
+        super().__init__()
+        self.select = discord.ui.Select(
+            placeholder="Choose a Flavor!",
+            min_values=1,
+            max_values=1,
+            options=[
+                discord.SelectOption(
+                    label="Vanilla",
+                    description="Pick this if you like vanilla!"
+                ),
+                discord.SelectOption(
+                    label="Chocolate",
+                    description="Pick this if you like chocolate!"
+                ),
+                discord.SelectOption(
+                    label="Strawberry",
+                    description="Pick this if you like strawberry!"
+                )
+            ]
+        )
+        self.add_item(self.select)
 
     async def interaction_check(self, interaction: discord.Interaction):
         # Only allow interactions from the same user who initiated the view
         return interaction.user == self.ctx.author
 
-
     async def on_timeout(self):
         # Clean up the view after it times out
         self.clear_items()
 
-    @discord.ui.button(label="Click me!", style=discord.ButtonStyle.success, custom_id="my_button")
-    async def button_callback(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_message("You clicked the button!", ephemeral=True)
+    async def select_callback(self, select: discord.ui.Select, interaction: discord.Interaction):
+        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!", ephemeral=True)
 
 
-@client.tree.command()
-async def test(ctx: discord.ApplicationCommandInteraction):
+@bot.command()
+async def flavor(ctx: discord.ApplicationCommandInteraction):
     view = MyView()
-    view.add_item(view.button_callback)
-    await ctx.send("Please select an option:", ephemeral=True, view=view)
+    view.ctx = ctx
+    await ctx.send("Choose a flavor!", view=view)
 
 
-client.run(os.getenv("discordToken"))
+bot.run(os.getenv("discordToken"))
