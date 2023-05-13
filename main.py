@@ -118,19 +118,8 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
         # if to_advance_picks:
         #     pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
 
-        # Add the completed embed to the pickem_embeds list
-        pickem_embeds.append(pickem_embed)
-
-    # Merge all the pickem_embeds into a single Embed object
-    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Pick'em", color=0xfffe0f)
-    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
-    # for embed in pickem_embeds:
-    #     for field in embed.fields:
-    #         pickem_info.add_field(name=field.name, value=field.value, inline=False)
-
     # Return the list of created embeds
-    print(pickem_info)
-    return pickem_info
+    return pickem_embed
 
 
 # Function to get user's Legends pickem
