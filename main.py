@@ -2,7 +2,7 @@ import discord
 import discord.ui
 import os
 
-bot = discord.Bot()
+client = discord.Client()
 
 class MyView(discord.ui.View):
     def __init__(self):
@@ -40,11 +40,16 @@ class MyView(discord.ui.View):
         await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!", ephemeral=True)
 
 
-@bot.command()
+@client.event
+async def on_ready():
+    print(f"We have logged in as {client.user}")
+
+
+@client.application_command()
 async def flavor(ctx: discord.ApplicationCommandInteraction):
     view = MyView()
     view.ctx = ctx
     await ctx.send("Choose a flavor!", view=view)
 
 
-bot.run(os.getenv("discordToken"))
+client.run(os.getenv("discordToken"))
