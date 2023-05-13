@@ -375,6 +375,7 @@ async def authorize(interaction: discord.Interaction):
 
 @client.tree.command()
 async def showpickem(interaction: discord.Interaction):
+    """Displays the user's Pick'em information."""
     await interaction.response.send_message("Choose a Pickem Stage", ephemeral=True, view=SelectView())
 
 client.run(os.getenv("discordToken"))
