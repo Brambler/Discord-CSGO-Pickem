@@ -54,39 +54,26 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     Used to get Users Challenger Pickems
     Usage: getChallengerPickem(api_key, event, steamID, authCode, user)
     '''
-
-    print(f"CURRENT VARS {api_key, event, steamID, authCode, user}")
     getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
     tournamentLayoutResponse = requests.get(getTournamentLayout_url)
-
     tournamentVar_json = json.loads(tournamentLayoutResponse.text)
     teams_info = tournamentVar_json["result"]["teams"]
-
     # Define a function to get the team name by pickid
     def get_team_name_by_pickid(pickid, teams):
         for team in teams:
             if team["pickid"] == pickid:
                 return team["name"]
         return None
-
     # Get user Predictions
     getPredictions_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentPredictions/v1?key={api_key}&event={event}&steamid={steamID}&steamidkey={authCode}"
-
     predictions_response = requests.get(getPredictions_url)
     predictions_response_json = json.loads(predictions_response.text)
-    print(predictions_response_json)
-
     # Access the picks from the JSON data
     current_picks = predictions_response_json["result"]["picks"]
-
-    print(current_picks)
-
     # Sort the current picks by group id
     current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
-
     # Define a list to store the pickem embeds for each stage
     pickem_embeds = []
-
     # Iterate through the sorted picks and create an embed for each group id
     for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
         # Create a new embed
@@ -117,9 +104,9 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     # Merge all the pickem_embeds into a single Embed object
     pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Pick'em", color=0xfffe0f)
     pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
-    # for embed in pickem_embeds:
-    #     for field in embed.fields:
-    #         pickem_info.add_field(name=field.name, value=field.value, inline=False)
+    for embed in pickem_embeds:
+        for field in embed.fields:
+            pickem_info.add_field(name=field.name, value=field.value, inline=False)
 
     # Return the list of created embeds
     print(pickem_info)
