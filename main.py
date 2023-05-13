@@ -46,7 +46,7 @@ class MyClient(discord.Client):
 class MyView(discord.ui.View):
     @discord.ui.button(label="Click me!", style=discord.ButtonStyle.success)
     async def button_callback(self, button, interaction):
-        await interaction.response.send_message("You clicked the button!")
+        await interaction.send("You clicked the button!", ephemeral=True)
 
 
 intents = discord.Intents.default()
@@ -64,6 +64,6 @@ async def on_ready():
 @client.tree.command()
 async def test(interaction: discord.Interaction):
     """Used to test a multiplechoice command"""
-    await interaction.response.send_message("Please select an option:", ephemeral=True, view=MyView())
+    await interaction.send("Please select an option:", ephemeral=True, view=MyView())
 
 client.run(os.getenv("discordToken"))
