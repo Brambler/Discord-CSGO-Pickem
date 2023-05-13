@@ -94,7 +94,7 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
         pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
 
         # Add fields for the 3-0 and 0-3 picks and To Advance picks
-        to_advance_picks = ""
+        to_advance_picks = []
         for pick in current_picks_sorted:
             if pick['groupid'] == groupid:
                 pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
@@ -105,16 +105,25 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
                 elif pick_index == 9 and groupid == 224:
                     pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
                 elif 1 <= pick_index <= 8 and groupid in [224]:
-                    to_advance_picks += f"{team_name}\n"
+                    to_advance_picks.append(team_name)
 
-        pickem_embed.add_field(name="To Advance Picks", value=to_advance_picks, inline=False)
+        # Add a single field for all the To Advance picks
+        if to_advance_picks:
+            pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
 
-        # # Add a single field for all the To Advance picks
-        # if to_advance_picks:
-        #     pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
+        # Add the completed embed to the pickem_embeds list
+        pickem_embeds.append(pickem_embed)
+
+    # Merge all the pickem_embeds into a single Embed object
+    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Pick'em", color=0xfffe0f)
+    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    # for embed in pickem_embeds:
+    #     for field in embed.fields:
+    #         pickem_info.add_field(name=field.name, value=field.value, inline=False)
 
     # Return the list of created embeds
-    return pickem_embed
+    print(pickem_info)
+    return pickem_info
 
 
 # Function to get user's Legends pickem
