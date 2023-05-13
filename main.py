@@ -49,15 +49,15 @@ class MyView(discord.ui.View):
 
     @discord.ui.button(label="Option 1", custom_id="option1", style=discord.ButtonStyle.primary)
     async def option1_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_message("Option 1 selected", ephemeral=True)
+        await button.interaction.response.send_message("Option 1 selected", ephemeral=True)
 
     @discord.ui.button(label="Option 2", custom_id="option2", style=discord.ButtonStyle.primary)
     async def option2_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_message("Option 2 selected", ephemeral=True)
+        await button.interaction.response.send_message("Option 2 selected", ephemeral=True)
 
     @discord.ui.button(label="Option 3", custom_id="option3", style=discord.ButtonStyle.primary)
     async def option3_button(self, button: discord.ui.Button, interaction: discord.Interaction):
-        await interaction.response.send_message("Option 3 selected", ephemeral=True)
+        await button.interaction.response.send_message("Option 3 selected", ephemeral=True)
 
 
 intents = discord.Intents.default()
