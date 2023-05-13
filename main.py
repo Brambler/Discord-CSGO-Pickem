@@ -1,4 +1,5 @@
 import discord
+import discord.ui
 import json
 import re
 import requests
@@ -8,11 +9,12 @@ import redis
 from redis.commands.json.path import Path
 from typing import Optional
 from discord import app_commands
+from discord.ext import commands
 
 r = redis.from_url(os.environ.get("REDISCLOUD_URL"))
 steam_api_key = os.getenv("steam_api_key")
 event = os.getenv("event_id")
-version = "1.4.4"
+version = "1.5"
 footerVar = f"Brambles Pickem Bot - Version {version}"
 discordPressence = '"Use /showpickem"'
 
@@ -48,63 +50,135 @@ def get_steam_id(profile_url: str) -> Optional[str]:
         steam_id_64 = re.search(r'/profiles/(\d+)', profile_url).group(1)
         return steam_id_64
 
-# Function to get user's pickem
-def getPickemInfo(api_key, event, steamID, authCode, user):
+# Function to get user's Challenger pickem
+def getChallengerPickem(api_key, event, steamID, authCode, user):
     '''
-    Used to get Users Pickems
-    Usage: getPickemInfo(api_key, event, steamID, authCode, user)
+    Used to get Users Challenger Pickems
+    Usage: getChallengerPickem(api_key, event, steamID, authCode, user)
     '''
     getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
     tournamentLayoutResponse = requests.get(getTournamentLayout_url)
-
-    # tournamentVar_preliminary_stage_picks = tournamentVar_json["result"]["sections"][0]["groups"]
-    # tournamentVar_quarterfinals_picks = tournamentVar_json["result"]["sections"][2]["groups"]
-    # tournamentVar_semifinals_picks = tournamentVar_json["result"]["sections"][3]["groups"]
-    # tournamentVar_grand_final_picks = tournamentVar_json["result"]["sections"][4]["groups"]
-
-
     tournamentVar_json = json.loads(tournamentLayoutResponse.text)
     teams_info = tournamentVar_json["result"]["teams"]
-
     # Define a function to get the team name by pickid
     def get_team_name_by_pickid(pickid, teams):
         for team in teams:
             if team["pickid"] == pickid:
                 return team["name"]
         return None
-
     # Get user Predictions
     getPredictions_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentPredictions/v1?key={api_key}&event={event}&steamid={steamID}&steamidkey={authCode}"
-
     predictions_response = requests.get(getPredictions_url)
     predictions_response_json = json.loads(predictions_response.text)
-
     # Access the picks from the JSON data
     current_picks = predictions_response_json["result"]["picks"]
+    # Sort the current picks by group id
+    current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
+    # Define a list to store the pickem embeds for each stage
+    pickem_embeds = []
+    # Iterate through the sorted picks and create an embed for each group id
+    for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
+        # Create a new embed
+        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Stage Picks", color=0xfffe0f)
+        pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
 
-    # create a new embed
-    pickem_embed=discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current **Challenger Round** Picks", color=0xfffe0f)
-    pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+        # Add fields for the 3-0 and 0-3 picks and To Advance picks
+        to_advance_picks = []
+        for pick in current_picks_sorted:
+            if pick['groupid'] == groupid:
+                pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
+                # Add 1 to index to display human-readable pick number
+                team_name = get_team_name_by_pickid(pick['pick'], teams_info)
+                if pick_index == 1 and groupid == 224:
+                    pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
+                elif pick_index == 9 and groupid == 224:
+                    pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+                elif 1 <= pick_index <= 8 and groupid in [224]:
+                    to_advance_picks.append(team_name)
 
-    # add fields for the 3-0 and 0-3 picks
-    for pick in current_picks:
-        team_name = get_team_name_by_pickid(pick['pick'], teams_info)
-        if pick['index'] == 0:
-            pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
-        elif pick['index'] == 8:
-            pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+        # Add a single field for all the To Advance picks
+        if to_advance_picks:
+            pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
 
-    # add field for the to-advance picks
-    to_advance_picks = ""
-    for index, pick in enumerate(current_picks):
-        team_name = get_team_name_by_pickid(pick['pick'], teams_info)
-        if 1 <= pick['index'] <= 7:
-            to_advance_picks += f"{team_name}\n"
-    pickem_embed.add_field(name="To Advance Picks", value=to_advance_picks, inline=False)
-    pickem_embed.set_footer(text=f'{footerVar}')
-    
+        # Add the completed embed to the pickem_embeds list
+        pickem_embeds.append(pickem_embed)
 
-    return pickem_embed
+    # Merge all the pickem_embeds into a single Embed object
+    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Pick'em", color=0xfffe0f)
+    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    for embed in pickem_embeds:
+        for field in embed.fields:
+            pickem_info.add_field(name=field.name, value=field.value, inline=field.inline)
+
+
+    # Return the list of created embeds
+    print(pickem_info)
+    return pickem_info
+
+# Function to get user's Legends pickem
+def getLegendsPickem(api_key, event, steamID, authCode, user):
+    '''
+    Used to get Users Legends Pickems
+    Usage: getLegendsPickem(api_key, event, steamID, authCode, user)
+    '''
+    getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
+    tournamentLayoutResponse = requests.get(getTournamentLayout_url)
+    tournamentVar_json = json.loads(tournamentLayoutResponse.text)
+    teams_info = tournamentVar_json["result"]["teams"]
+    # Define a function to get the team name by pickid
+    def get_team_name_by_pickid(pickid, teams):
+        for team in teams:
+            if team["pickid"] == pickid:
+                return team["name"]
+        return None
+    # Get user Predictions
+    getPredictions_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentPredictions/v1?key={api_key}&event={event}&steamid={steamID}&steamidkey={authCode}"
+    predictions_response = requests.get(getPredictions_url)
+    predictions_response_json = json.loads(predictions_response.text)
+    # Access the picks from the JSON data
+    current_picks = predictions_response_json["result"]["picks"]
+    # Sort the current picks by group id
+    current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
+    # Define a list to store the pickem embeds for each stage
+    pickem_embeds = []
+    # Iterate through the sorted picks and create an embed for each group id
+    for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
+        # Create a new embed
+        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Legend\'s Stage Picks", color=0xfffe0f)
+        pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+
+        # Add fields for the 3-0 and 0-3 picks and To Advance picks
+        to_advance_picks = []
+        for pick in current_picks_sorted:
+            if pick['groupid'] == groupid:
+                pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
+                # Add 1 to index to display human-readable pick number
+                team_name = get_team_name_by_pickid(pick['pick'], teams_info)
+                if pick_index == 1 and groupid == 225:
+                    pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
+                elif pick_index == 9 and groupid == 225:
+                    pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
+                elif 1 <= pick_index <= 8 and groupid in [225]:
+                    to_advance_picks.append(team_name)
+
+        # Add a single field for all the To Advance picks
+        if to_advance_picks:
+            pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
+
+        # Add the completed embed to the pickem_embeds list
+        pickem_embeds.append(pickem_embed)
+
+    # Merge all the pickem_embeds into a single Embed object
+    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Legend\'s Pick'em", color=0xfffe0f)
+    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    for embed in pickem_embeds:
+        for field in embed.fields:
+            pickem_info.add_field(name=field.name, value=field.value, inline=field.inline)
+
+
+    # Return the list of created embeds
+    print(pickem_info)
+    return pickem_info
 
 # Function to retrive User Data from DB
 def get_user_data(user_id):
@@ -119,28 +193,73 @@ def get_user_data(user_id):
         return None
 
 class MyClient(discord.Client):
-    '''
-    A CommandTree is a special type that holds all the application command
-    state required to make it work. This is a separate class because it
-    allows all the extra state to be opt-in.
-    Whenever you want to work with application commands, your tree is used
-    to store and work with them.
-    Note: When using commands.Bot instead of discord.Client, the bot will
-    maintain its own tree instead.
-    '''
     def __init__(self, *, intents: discord.Intents):
-        '''
-        In this basic example, we just synchronize the app commands to one guild.
-        Instead of specifying a guild to every command, we copy over our global commands instead.
-        By doing so, we don't have to wait up to an hour until they are shown to the end-user.
-        '''
         super().__init__(intents=intents)
         self.tree = app_commands.CommandTree(self)
 
     async def setup_hook(self):
-        # This copies the global commands over to your guild.
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
+
+class Select(discord.ui.Select):
+    def __init__(self):
+        options=[
+            discord.SelectOption(label="Challenger Stage",description="Select this to Show off your Challenger Stage Pickem!"),
+            discord.SelectOption(label="Legends Stage",description="Select this to Show off your Legends Stage Pickem!")
+            ]
+        super().__init__(placeholder="Select a Pickem Stage",max_values=1,min_values=1,options=options)
+    async def callback(self, interaction: discord.Interaction):
+        if self.values[0] == "Challenger Stage":
+            print("Challenger Stage")
+            user_username = interaction.user.name
+            user_data = get_user_data(interaction.user.id)
+            if not user_data:
+                embed = discord.Embed(
+                    title='Not Authorized!',
+                    description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
+                    color=0xff0000
+                )
+                embed.set_footer(text=f'{footerVar}')
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
+            pickem_info = getChallengerPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], user_username)
+            # Format the pickem_info as a string
+            pickem_info_str = pickem_info
+
+            pickemResponse_embed = discord.Embed(
+                    title='Pickem Retrieved!',
+                    description='*Only you can see this message*\n\nBelow is your pickem!\n**Your Pick\'em is now shown to everyone in this channel**\n\n*Thanks for using my bot <3*',
+                    color=0x00ff00
+                )
+            pickemResponse_embed.set_footer(text=f'{footerVar}')
+            await interaction.response.send_message(embed=pickemResponse_embed, ephemeral=True)
+            await client.change_presence(activity=discord.Game("Use /showpickem"))
+            print(f'Setting Pressence to "Use /showpickem"')
+            await interaction.channel.send(embed=pickem_info_str)
+        elif self.values[0] == "Legends Stage":
+            print("Legends Stage")
+            user_username = interaction.user.name
+            user_data = get_user_data(interaction.user.id)
+            if not user_data:
+                embed = discord.Embed(
+                    title='Not Authorized!',
+                    description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
+                    color=0xff0000
+                )
+                embed.set_footer(text=f'{footerVar}')
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
+            pickem_info = getLegendsPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], user_username)
+            # Format the pickem_info as a string
+            pickem_info_str = pickem_info
+            await client.change_presence(activity=discord.Game("Use /showpickem"))
+            print(f'Setting Pressence to "Use /showpickem"')
+            await interaction.channel.send(embed=pickem_info_str)
+
+class SelectView(discord.ui.View):
+    def __init__(self, *, timeout = 30):
+        super().__init__(timeout=timeout)
+        self.add_item(Select())
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
@@ -246,49 +365,17 @@ async def authorize(interaction: discord.Interaction):
         )
         embed.set_footer(text=f'{footerVar}')
         await client.change_presence(activity=discord.Game("Use /showpickem"))
-        print(f'Setting Pressence to "Use /showpickem"')
+        print(f'Setting Pressence to "Use /help"')
         await dm.send(embed=embed)
         await interaction.response.send_message(embed=embed, ephemeral=True)
 
-#######################
+###########################
 ##/showpickem COMMAND##
-#######################
+###########################
 
 @client.tree.command()
 async def showpickem(interaction: discord.Interaction):
     """Displays the user's Pick'em information."""
-    # Get the user's data from the Redis database
-    user_data = get_user_data(interaction.user.id)
-    if not user_data:
-        embed = discord.Embed(
-            title='Not Authorized!',
-            description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
-            color=0xff0000
-        )
-        embed.set_footer(text=f'{footerVar}')
-        await interaction.response.send_message(embed=embed, ephemeral=True)
-        return
-
-    # Call the function from the other script to get the user's Pick'em information
-    user_username = interaction.user.name
-
-    await client.change_presence(activity=discord.Game(f"Retrieving Pickem for {user_username}"))
-    print(f'Setting Pressence to "Retrieving Pickem for {user_username}"')
-    
-    pickem_info = getPickemInfo(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], user_username)
-
-    # Format the pickem_info as a string
-    pickem_info_str = pickem_info
-
-    pickemResponse_embed = discord.Embed(
-            title='Pickem Retrieved!',
-            description='*Only you can see this message*\n\nBelow is your pickem!\n**Your Pick\'em is now shown to everyone in this channel**\n\n*Thanks for using my bot <3*',
-            color=0x00ff00
-        )
-    pickemResponse_embed.set_footer(text=f'{footerVar}')
-    await interaction.response.send_message(embed=pickemResponse_embed, ephemeral=True)
-    await client.change_presence(activity=discord.Game("Use /showpickem"))
-    print(f'Setting Pressence to "Use /showpickem"')
-    await interaction.channel.send(embed=pickem_info_str)
+    await interaction.response.send_message("Choose a Pickem Stage", ephemeral=True, view=SelectView())
 
 client.run(os.getenv("discordToken"))
