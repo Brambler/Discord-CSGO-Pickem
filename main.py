@@ -74,9 +74,12 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
 
     predictions_response = requests.get(getPredictions_url)
     predictions_response_json = json.loads(predictions_response.text)
+    print(predictions_response_json)
 
     # Access the picks from the JSON data
     current_picks = predictions_response_json["result"]["picks"]
+
+    print(current_picks)
 
     # Sort the current picks by group id
     current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
@@ -97,10 +100,13 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
             pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
             team_name = get_team_name_by_pickid(pick['pick'], teams_info)
             if pick_index == 1 and groupid == 224:
+                print(f"3-0: {team_name}")
                 pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
             elif pick_index == 9 and groupid == 224:
+                print(f"0-3: {team_name}")
                 pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
             elif 1 <= pick_index <= 8 and groupid in [224]:
+                print(f"Advance: {team_name}")
                 to_advance_picks.append(team_name)
 
     # Add a single field for all the To Advance picks
