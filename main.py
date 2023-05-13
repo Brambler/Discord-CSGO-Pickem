@@ -94,25 +94,29 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
         pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
 
         # Add fields for the 3-0 and 0-3 picks and To Advance picks
-        to_advance_picks = []
+        to_advance_picks = ""
         for pick in current_picks_sorted:
             if pick['groupid'] == groupid:
                 pick_index = pick['index'] + 1  # Add 1 to index to display human-readable pick number
                 # Add 1 to index to display human-readable pick number
                 team_name = get_team_name_by_pickid(pick['pick'], teams_info)
                 if pick_index == 1 and groupid == 224:
-                    print(f"3-0: {team_name}")
                     pickem_embed.add_field(name="3-0 Pick", value=team_name, inline=True)
                 elif pick_index == 9 and groupid == 224:
-                    print(f"0-3: {team_name}")
                     pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
                 elif 1 <= pick_index <= 8 and groupid in [224]:
-                    print(f"Advance: {team_name}")
                     to_advance_picks.append(team_name)
 
-        # Add a single field for all the To Advance picks
-        if to_advance_picks:
-            pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
+            # add field for the to-advance picks
+        for pick, current_picks_sorted in enumerate(current_picks):
+            team_name = get_team_name_by_pickid(pick['pick'], teams_info)
+            if 1 <= pick_index <= 7:
+                to_advance_picks += f"{team_name}\n"
+        pickem_embed.add_field(name="To Advance Picks", value=to_advance_picks, inline=False)
+
+        # # Add a single field for all the To Advance picks
+        # if to_advance_picks:
+        #     pickem_embed.add_field(name="To Advance Picks", value="\n".join(to_advance_picks), inline=False)
 
         # Add the completed embed to the pickem_embeds list
         pickem_embeds.append(pickem_embed)
