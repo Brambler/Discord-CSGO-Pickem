@@ -43,6 +43,23 @@ class MyClient(discord.Client):
         self.tree.copy_global_to(guild=MY_GUILD)
         await self.tree.sync(guild=MY_GUILD)
 
+class MyView(discord.ui.View):
+    def __init__(self):
+        super().__init__(timeout=None)
+
+    @discord.ui.button(label="Option 1", custom_id="option1", style=discord.ButtonStyle.primary)
+    async def option1_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.send_message("Option 1 selected", ephemeral=True)
+
+    @discord.ui.button(label="Option 2", custom_id="option2", style=discord.ButtonStyle.primary)
+    async def option2_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.send_message("Option 2 selected", ephemeral=True)
+
+    @discord.ui.button(label="Option 3", custom_id="option3", style=discord.ButtonStyle.primary)
+    async def option3_button(self, button: discord.ui.Button, interaction: discord.Interaction):
+        await interaction.response.send_message("Option 3 selected", ephemeral=True)
+
+
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
 
@@ -55,25 +72,8 @@ async def on_ready():
 
 
 # Multiple Choice
-@client.tree.command()
 async def test(interaction: discord.Interaction):
     """Used to test a multiplechoice command"""
-    # Define the options for the select menu
-    options = [
-        discord.SelectOption(label='Option 1', value='option1'),
-        discord.SelectOption(label='Option 2', value='option2'),
-        discord.SelectOption(label='Option 3', value='option3')
-    ]
-
-    # Create the select menu
-    select_menu = discord.Select(custom_id='test_select_menu', options=options)
-    select_menu.placeholder = 'Select an option'
-
-    # Create the action row and add the select menu to it
-    action_row = discord.ActionRow(select_menu)
-
-    # Send the message with the select menu
-    await interaction.response.send_message('Please select an option:', components=[action_row], ephemeral=True)
-
+    await interaction.response.send_message("Please select an option:", ephemeral=True, view=MyView())
 
 client.run(os.getenv("discordToken"))
