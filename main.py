@@ -105,13 +105,8 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
                 elif pick_index == 9 and groupid == 224:
                     pickem_embed.add_field(name="0-3 Pick", value=team_name, inline=True)
                 elif 1 <= pick_index <= 8 and groupid in [224]:
-                    to_advance_picks.append(team_name)
+                    to_advance_picks += f"{team_name}\n"
 
-            # add field for the to-advance picks
-        for pick, current_picks_sorted in enumerate(current_picks):
-            team_name = get_team_name_by_pickid(pick['pick'], teams_info)
-            if 1 <= pick_index <= 7:
-                to_advance_picks += f"{team_name}\n"
         pickem_embed.add_field(name="To Advance Picks", value=to_advance_picks, inline=False)
 
         # # Add a single field for all the To Advance picks
