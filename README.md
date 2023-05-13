@@ -34,7 +34,7 @@ Note that users must run the `/authorize` command before they can use the `/show
 
 ## Planned Features
 
-- [ ] MultiStage Support (Challenger, Legends, Champions)
+- [X] MultiStage Support (Challenger, Legends, Champions)
 
 - [ ] Track Pickem Coin Points
 
