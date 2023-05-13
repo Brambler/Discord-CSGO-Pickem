@@ -49,7 +49,9 @@ class MyView(discord.ui.View):
         ]
     )
     async def select_callback(self, select, interaction):
-        print(f"{self, select, interaction}")
+        print('------------------------------')
+        print(f"{select.values}")
+        print('------------------------------')
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
