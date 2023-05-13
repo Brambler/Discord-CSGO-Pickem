@@ -49,7 +49,7 @@ class MyView(discord.ui.View):
         ]
     )
     async def select_callback(self, select, interaction):
-        await interaction.response.send_message(f"Awesome! I like {select.values[0]} too!", ephemeral=True)
+        print(f"{self, select, interaction}")
 
 intents = discord.Intents.default()
 client = MyClient(intents=intents)
