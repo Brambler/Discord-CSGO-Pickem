@@ -257,7 +257,7 @@ class Select(discord.ui.Select):
             await interaction.channel.send(embed=pickem_info_str)
 
 class SelectView(discord.ui.View):
-    def __init__(self, *, timeout = 180):
+    def __init__(self, *, timeout = 30):
         super().__init__(timeout=timeout)
         self.add_item(Select())
 
