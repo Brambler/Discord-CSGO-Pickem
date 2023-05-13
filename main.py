@@ -106,7 +106,8 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
     for embed in pickem_embeds:
         for field in embed.fields:
-            pickem_info.add_field(name=field.name, value=field.value, inline=False)
+            pickem_info.add_field(name=field.name, value=field.value, inline=field.inline)
+
 
     # Return the list of created embeds
     print(pickem_info)
