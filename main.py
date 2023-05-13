@@ -66,11 +66,11 @@ async def test(interaction: discord.Interaction):
     ]
 
     # Create the select menu
-    select_menu = discord.ui.SelectMenu(custom_id='test_select_menu', options=options)
+    select_menu = discord.Select(custom_id='test_select_menu', options=options)
     select_menu.placeholder = 'Select an option'
 
     # Create the action row and add the select menu to it
-    action_row = discord.ui.ActionRow(select_menu)
+    action_row = discord.ActionRow(select_menu)
 
     # Send the message with the select menu
     await interaction.response.send_message('Please select an option:', components=[action_row], ephemeral=True)
