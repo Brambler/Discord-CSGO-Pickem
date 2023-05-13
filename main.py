@@ -1,4 +1,5 @@
 import discord
+import discord.ui
 import json
 import re
 import requests
@@ -56,42 +57,23 @@ async def on_ready():
 # Multiple Choice
 @client.tree.command()
 async def test(interaction: discord.Interaction):
-    """Used to test a multiple choice command"""
+    """Used to test a multiplechoice command"""
+    # Define the options for the select menu
     options = [
-        {
-            "label": "Option 1",
-            "value": "option1"
-        },
-        {
-            "label": "Option 2",
-            "value": "option2"
-        },
-        {
-            "label": "Option 3",
-            "value": "option3"
-        }
+        discord.SelectOption(label='Option 1', value='option1'),
+        discord.SelectOption(label='Option 2', value='option2'),
+        discord.SelectOption(label='Option 3', value='option3')
     ]
-    # Create a select menu with the options
-    select_menu = discord.ui.SelectMenu(custom_id="test_select_menu", options=options)
-    # Create an action row with the select menu
+
+    # Create the select menu
+    select_menu = discord.ui.SelectMenu(custom_id='test_select_menu', options=options)
+    select_menu.placeholder = 'Select an option'
+
+    # Create the action row and add the select menu to it
     action_row = discord.ui.ActionRow(select_menu)
 
-    # Send a message with the select menu
-    embed = discord.Embed(
-        title='Authorization Confirmed!',
-        description=f'Testing Message',
-        color=0x00ff00
-    )
-    embed.set_footer(text=f'{footerVar}')
-    await client.change_presence(activity=discord.Game("Use /showpickem"))
-    await interaction.response.send_message(embed=embed, ephemeral=True, components=[action_row])
+    # Send the message with the select menu
+    await interaction.response.send_message('Please select an option:', components=[action_row], ephemeral=True)
 
-    # Wait for the user's selection
-    try:
-        select_ctx: discord.ui.SelectContext = await client.wait_for("select_option", check=lambda ctx: ctx.component.custom_id == "test_select_menu" and ctx.user.id == interaction.user.id, timeout=30)
-        selected_option = select_ctx.values[0]
-        await select_ctx.send(f"You selected: {selected_option}", ephemeral=True)
-    except asyncio.TimeoutError:
-        await interaction.followup.send("You didn't make a selection.", ephemeral=True)
 
 client.run(os.getenv("discordToken"))
