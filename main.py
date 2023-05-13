@@ -238,7 +238,31 @@ class Select(discord.ui.Select):
             await interaction.channel.send(embed=pickem_info_str)
         elif self.values[0] == "Legends Stage":
             print("Legends Stage")
-            await interaction.response.send_message("This is the second option from the list entire wooo!",ephemeral=False)
+            user_username = interaction.user.name
+            user_data = get_user_data(interaction.user.id)
+            if not user_data:
+                embed = discord.Embed(
+                    title='Not Authorized!',
+                    description='Sorry, looks like you haven\'t authorized your account yet!\nGo ahead and use the **/Authorize** command\nYou will get a DM from the bot with directions.',
+                    color=0xff0000
+                )
+                embed.set_footer(text=f'{footerVar}')
+                await interaction.response.send_message(embed=embed, ephemeral=True)
+                return
+            pickem_info = getLegendsPickem(steam_api_key, event, user_data['steam_id'], user_data['pickem_auth_code'], user_username)
+            # Format the pickem_info as a string
+            pickem_info_str = pickem_info
+
+            pickemResponse_embed = discord.Embed(
+                    title='Pickem Retrieved!',
+                    description='*Only you can see this message*\n\nBelow is your pickem!\n**Your Pick\'em is now shown to everyone in this channel**\n\n*Thanks for using my bot <3*',
+                    color=0x00ff00
+                )
+            pickemResponse_embed.set_footer(text=f'{footerVar}')
+            await interaction.response.send_message(embed=pickemResponse_embed, ephemeral=True)
+            await client.change_presence(activity=discord.Game("Use /showpickem"))
+            print(f'Setting Pressence to "Use /showpickem"')
+            await interaction.channel.send(embed=pickem_info_str)
 
 class SelectView(discord.ui.View):
     def __init__(self, *, timeout = 180):
