@@ -40,4 +40,5 @@ Note that users must run the `/authorize` command before they can use the `/show
 
 ## Demo of using the bot
 
-https://github.com/Brambler/Discord-CSGO-Pickem/assets/25120419/28b95898-7f22-4fda-9ac3-9dda4749ca8f
+https://github.com/Brambler/Discord-CSGO-Pickem/assets/25120419/ce6daa60-1fd4-4498-8b40-65db5890e401
+
