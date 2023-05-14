@@ -106,6 +106,7 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
     # Merge all the pickem_embeds into a single Embed object
     pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Pick'em", color=0xfffe0f)
     pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    pickem_info.set_footer(text=f"Brambles Pickem Bot - Version {version}")
     for embed in pickem_embeds:
         for field in embed.fields:
             pickem_info.add_field(name=field.name, value=field.value, inline=field.inline)
@@ -171,6 +172,7 @@ def getLegendsPickem(api_key, event, steamID, authCode, user):
     # Merge all the pickem_embeds into a single Embed object
     pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Pick'em", color=0xfffe0f)
     pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    pickem_info.set_footer(text=f"Brambles Pickem Bot - Version {version}")
     for embed in pickem_embeds:
         for field in embed.fields:
             pickem_info.add_field(name=field.name, value=field.value, inline=field.inline)
