@@ -1,0 +1,131 @@
+{
+    "result": {
+        "picks": [
+            {
+                "groupid": 224,
+                "index": 0,
+                "pick": 122
+            },
+            {
+                "groupid": 224,
+                "index": 1,
+                "pick": 48
+            },
+            {
+                "groupid": 224,
+                "index": 2,
+                "pick": 61
+            },
+            {
+                "groupid": 224,
+                "index": 3,
+                "pick": 84
+            },
+            {
+                "groupid": 224,
+                "index": 4,
+                "pick": 96
+            },
+            {
+                "groupid": 224,
+                "index": 5,
+                "pick": 59
+            },
+            {
+                "groupid": 224,
+                "index": 6,
+                "pick": 111
+            },
+            {
+                "groupid": 224,
+                "index": 7,
+                "pick": 106
+            },
+            {
+                "groupid": 224,
+                "index": 8,
+                "pick": 86
+            },
+            {
+                "groupid": 225,
+                "index": 0,
+                "pick": 85
+            },
+            {
+                "groupid": 225,
+                "index": 1,
+                "pick": 12
+            },
+            {
+                "groupid": 225,
+                "index": 2,
+                "pick": 61
+            },
+            {
+                "groupid": 225,
+                "index": 3,
+                "pick": 89
+            },
+            {
+                "groupid": 225,
+                "index": 4,
+                "pick": 48
+            },
+            {
+                "groupid": 225,
+                "index": 5,
+                "pick": 84
+            },
+            {
+                "groupid": 225,
+                "index": 6,
+                "pick": 1
+            },
+            {
+                "groupid": 225,
+                "index": 7,
+                "pick": 118
+            },
+            {
+                "groupid": 225,
+                "index": 8,
+                "pick": 115
+            },
+            {
+                "groupid": 226,
+                "index": 0,
+                "pick": 118
+            },
+            {
+                "groupid": 227,
+                "index": 0,
+                "pick": 59
+            },
+            {
+                "groupid": 228,
+                "index": 0,
+                "pick": 111
+            },
+            {
+                "groupid": 229,
+                "index": 0,
+                "pick": 12
+            },
+            {
+                "groupid": 230,
+                "index": 0,
+                "pick": 1
+            },
+            {
+                "groupid": 231,
+                "index": 0,
+                "pick": 48
+            },
+            {
+                "groupid": 232,
+                "index": 0,
+                "pick": 84
+            }
+        ]
+    }
+}
