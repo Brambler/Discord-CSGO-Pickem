@@ -144,7 +144,7 @@ def getLegendsPickem(api_key, event, steamID, authCode, user):
     # Iterate through the sorted picks and create an embed for each group id
     for groupid, group_name in [(224, "PRE-LIM"), (225, "GROUP"), (226, "QUARTERFINAL"), (227, "QUARTERFINAL"), (228, "QUARTERFINAL"), (229, "QUARTERFINAL"), (230, "SEMIFINAL"), (231, "SEMIFINAL"), (232, "GRANDFINAL")]:
         # Create a new embed
-        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Legend\'s Stage Picks", color=0xfffe0f)
+        pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Stage Picks", color=0xfffe0f)
         pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
         pickem_embed.set_footer(text=f"Brambles Pickem Bot - Version {version}")
         # Add fields for the 3-0 and 0-3 picks and To Advance picks
@@ -168,11 +168,22 @@ def getLegendsPickem(api_key, event, steamID, authCode, user):
         # Add the completed embed to the pickem_embeds list
         pickem_embeds.append(pickem_embed)
 
+    # Merge all the pickem_embeds into a single Embed object
+    pickem_info = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Pick'em", color=0xfffe0f)
+    pickem_info.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    for embed in pickem_embeds:
+        for field in embed.fields:
+            pickem_info.add_field(name=field.name, value=field.value, inline=field.inline)
+
+    # Return the list of created embeds
+    print(pickem_info)
+    return pickem_info
+
 # Function to get user's Champions pickem
 def getChampionsPickem(api_key, event, steamID, authCode, user):
     '''
     Used to get Users Champions Pickems
-    Usage: getLegendsPickem(api_key, event, steamID, authCode, user)
+    Usage: getChampionsPickem(api_key, event, steamID, authCode, user)
     '''
     getTournamentLayout_url = f"https://api.steampowered.com/ICSGOTournaments_730/GetTournamentLayout/v1?key={steam_api_key}&event={event}"
     tournamentLayoutResponse = requests.get(getTournamentLayout_url)
