@@ -201,7 +201,6 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
             if pick['groupid'] == groupid:
                 pick_index = pick['index']
                 team_name = get_team_name_by_pickid(pick['pick'], teams_info)
-                
                 if pick_index == 0 and groupid == 226:
                     qmatch1pick = team_name
                 elif pick_index == 0 and groupid == 227:
@@ -236,7 +235,7 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
         championsEmbed.add_field(name="Quarter Finals",value=f"{qmatch1pick} vs {qmatch2pick}\n{qmatch3pick} vs {qmatch4pick}",inline=True)
         championsEmbed.add_field(name="Semi-Finals",value=f"{smatch1pick} vs {smatch2pick}\n-",inline=True)
         championsEmbed.add_field(name="Grand Finalist",value=f"{cmatchpick}\n-",inline=True)
-        championsEmbed.set_author(name="SourceCode",url="https://github.com/Brambler/Discord-CSGO-Pickem",icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png",proxy_icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+        championsEmbed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
         championsEmbed.set_footer(text="Brambles Pickem Bot - Version {version}")
 
     # Return the list of created embeds
