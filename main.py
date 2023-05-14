@@ -81,7 +81,7 @@ def getChallengerPickem(api_key, event, steamID, authCode, user):
         # Create a new embed
         pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Challenger Stage Picks", color=0xfffe0f)
         pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
-
+        pickem_embed.set_footer(text=f"Brambles Pickem Bot - Version {version}")
         # Add fields for the 3-0 and 0-3 picks and To Advance picks
         to_advance_picks = []
         for pick in current_picks_sorted:
@@ -146,7 +146,7 @@ def getLegendsPickem(api_key, event, steamID, authCode, user):
         # Create a new embed
         pickem_embed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship", description=f"{user}'s Current Legend\'s Stage Picks", color=0xfffe0f)
         pickem_embed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
-
+        pickem_embed.set_footer(text=f"Brambles Pickem Bot - Version {version}")
         # Add fields for the 3-0 and 0-3 picks and To Advance picks
         to_advance_picks = []
         for pick in current_picks_sorted:
@@ -236,7 +236,7 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
         championsEmbed.add_field(name="Semi-Finals",value=f"{smatch1pick} vs {smatch2pick}\n-",inline=True)
         championsEmbed.add_field(name="Grand Finalist",value=f"{cmatchpick}\n-",inline=True)
         championsEmbed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
-        championsEmbed.set_footer(text="Brambles Pickem Bot - Version {version}")
+        championsEmbed.set_footer(text=f"Brambles Pickem Bot - Version {version}")
 
     # Return the list of created embeds
     return championsEmbed
