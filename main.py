@@ -229,7 +229,7 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
                 elif pick_index == 0 and groupid == 232:
                     cmatchpick = team_name
 
-    championsEmbed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship",description="Bramble's Current Legend's Pick'em",color=0xfffe0f)
+    championsEmbed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship",description=f"{user}'s Current Champion's Pick'em",color=0xfffe0f)
     championsEmbed.add_field(name="Quarter Finals",value=f"{qmatch1pick} vs {qmatch2pick}\n{qmatch3pick} vs {qmatch4pick}",inline=True)
     championsEmbed.add_field(name="Semi-Finals",value=f"{smatch1pick} vs {smatch2pick}\n-",inline=True)
     championsEmbed.add_field(name="Grand Finalist",value=f"{cmatchpick}\n-",inline=True)
