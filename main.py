@@ -208,7 +208,7 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
     current_picks_sorted = sorted(current_picks, key=lambda x: x['groupid'])
 
     for groupid in [226, 227, 228, 229, 230, 231, 232]:
-        qmatch1pick = qmatch2pick = qmatch3pick = qmatch4pick = smatch1pick = smatch2pick = cmatchpick = None
+        # qmatch1pick = qmatch2pick = qmatch3pick = qmatch4pick = smatch1pick = smatch2pick = cmatchpick = None
         
         for pick in current_picks_sorted:
             if pick['groupid'] == groupid:
@@ -229,20 +229,20 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
                 elif pick_index == 0 and groupid == 232:
                     cmatchpick = team_name
         
-        if qmatch1pick is None:
-            qmatch1pick = "Not Available"
-        if qmatch2pick is None:
-            qmatch2pick = "Not Available"
-        if qmatch3pick is None:
-            qmatch3pick = "Not Available"
-        if qmatch4pick is None:
-            qmatch4pick = "Not Available"
-        if smatch1pick is None:
-            smatch1pick = "Not Available"
-        if smatch2pick is None:
-            smatch2pick = "Not Available"
-        if cmatchpick is None:
-            cmatchpick = "Not Available"
+        # if qmatch1pick is None:
+        #     qmatch1pick = "Not Available"
+        # if qmatch2pick is None:
+        #     qmatch2pick = "Not Available"
+        # if qmatch3pick is None:
+        #     qmatch3pick = "Not Available"
+        # if qmatch4pick is None:
+        #     qmatch4pick = "Not Available"
+        # if smatch1pick is None:
+        #     smatch1pick = "Not Available"
+        # if smatch2pick is None:
+        #     smatch2pick = "Not Available"
+        # if cmatchpick is None:
+        #     cmatchpick = "Not Available"
 
         championsEmbed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship",description="Bramble's Current Legend's Pick'em",color=0xfffe0f)
         championsEmbed.add_field(name="Quarter Finals",value=f"{qmatch1pick} vs {qmatch2pick}\n{qmatch3pick} vs {qmatch4pick}",inline=True)
