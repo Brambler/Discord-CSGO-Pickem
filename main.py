@@ -228,28 +228,13 @@ def getChampionsPickem(api_key, event, steamID, authCode, user):
                     smatch2pick = team_name
                 elif pick_index == 0 and groupid == 232:
                     cmatchpick = team_name
-        
-        # if qmatch1pick is None:
-        #     qmatch1pick = "Not Available"
-        # if qmatch2pick is None:
-        #     qmatch2pick = "Not Available"
-        # if qmatch3pick is None:
-        #     qmatch3pick = "Not Available"
-        # if qmatch4pick is None:
-        #     qmatch4pick = "Not Available"
-        # if smatch1pick is None:
-        #     smatch1pick = "Not Available"
-        # if smatch2pick is None:
-        #     smatch2pick = "Not Available"
-        # if cmatchpick is None:
-        #     cmatchpick = "Not Available"
 
-        championsEmbed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship",description="Bramble's Current Legend's Pick'em",color=0xfffe0f)
-        championsEmbed.add_field(name="Quarter Finals",value=f"{qmatch1pick} vs {qmatch2pick}\n{qmatch3pick} vs {qmatch4pick}",inline=True)
-        championsEmbed.add_field(name="Semi-Finals",value=f"{smatch1pick} vs {smatch2pick}\n-",inline=True)
-        championsEmbed.add_field(name="Grand Finalist",value=f"{cmatchpick}\n-",inline=True)
-        championsEmbed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
-        championsEmbed.set_footer(text=f"Brambles Pickem Bot - Version {version}")
+    championsEmbed = discord.Embed(title="BLAST.tv Paris 2023 CS:GO Major Championship",description="Bramble's Current Legend's Pick'em",color=0xfffe0f)
+    championsEmbed.add_field(name="Quarter Finals",value=f"{qmatch1pick} vs {qmatch2pick}\n{qmatch3pick} vs {qmatch4pick}",inline=True)
+    championsEmbed.add_field(name="Semi-Finals",value=f"{smatch1pick} vs {smatch2pick}\n-",inline=True)
+    championsEmbed.add_field(name="Grand Finalist",value=f"{cmatchpick}\n-",inline=True)
+    championsEmbed.set_author(name="SourceCode", url="https://github.com/Brambler/Discord-CSGO-Pickem", icon_url="https://github.githubassets.com/images/modules/logos_page/GitHub-Mark.png")
+    championsEmbed.set_footer(text=f"Brambles Pickem Bot - Version {version}")
 
     # Return the list of created embeds
     return championsEmbed
